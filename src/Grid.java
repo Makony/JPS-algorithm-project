@@ -107,13 +107,28 @@ public class Grid {
             }
 
             // Check for forced neighbors (change of direction or jump point)
-            if ((dx != 0 && (getNode(x, y - 1) != null && !getNode(x, y - 1).isWalkable()) ||
-                    (getNode(x, y + 1) != null && !getNode(x, y + 1).isWalkable())) ||
-                    (dy != 0 && (getNode(x - 1, y) != null && !getNode(x - 1, y).isWalkable()) ||
-                            (getNode(x + 1, y) != null && !getNode(x + 1, y).isWalkable()))) {
-                return current;
+            if (dx != 0) {
+                // Check for forced vertical neighbors (above or below the node)
+                if (isForcedNeighbor(x, y - 1) || isForcedNeighbor(x, y + 1)) {
+                    return current;
+                }
             }
+
+            if (dy != 0) {
+                // Check for forced horizontal neighbors (left or right of the node)
+                if (isForcedNeighbor(x - 1, y) || isForcedNeighbor(x + 1, y)) {
+                    return current;
+                }
+            }
+
+            // Continue the jump if no forced neighbors are found
         }
     }
+
+    // Helper method to check if a node is a forced neighbor (blocked in the adjacent direction)
+    private boolean isForcedNeighbor(int x, int y) {
+        return getNode(x, y) != null && !getNode(x, y).isWalkable();
+    }
+
 }
 

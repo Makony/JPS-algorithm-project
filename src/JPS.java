@@ -55,13 +55,37 @@ public class JPS {
     }
 
     /**
-     * Identifies successors of the current node using the JPS jump function.
+     *
+     * @param current
+     * @param goal
+     * @return
      */
     private List<Node> identifySuccessors(Node current, Node goal) {
         List<Node> successors = new ArrayList<>();
-        // TODO: Implement the logic for forced neighbors and jump points
+
+        int[][] directions = {
+                {1, 0}, {0, 1}, {-1, 0}, {0, -1},   // Cardinal directions
+                {1, 1}, {-1, 1}, {-1, -1}, {1, -1}   // Diagonal directions
+        };
+
+        // Iterate through each direction
+        for (int[] dir : directions) {
+            int dx = dir[0];
+            int dy = dir[1];
+
+            // Use jump to find the next valid jump point in this direction
+            Node jumpPoint = grid.jump(current, dx, dy);
+
+            // If a valid jump point is found, add it to the list of successors
+            if (jumpPoint != null) {
+                successors.add(jumpPoint);
+            }
+        }
+
         return successors;
     }
+
+
 
     /**
      * Calculates the heuristic distance between two nodes (Manhattan distance).

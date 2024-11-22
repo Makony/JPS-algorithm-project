@@ -2,14 +2,20 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Grid grid = new Grid(10, 10);
+        Grid grid = new Grid(3, 3);
 
-        grid.setWalkable(3, 3, true);
-        grid.setWalkable(3, 4, true);
-        grid.setWalkable(3, 5, true);
+        grid.setWalkable(0, 0, true);
+        grid.setWalkable(0, 1, true);
+        grid.setWalkable(0, 2, true);
+        grid.setWalkable(1, 2, true);
+        grid.setWalkable(2, 2, true);
+        grid.setWalkable(1, 0, true);
+        grid.setWalkable(2, 0, true);
+        grid.setWalkable(1, 1, true);
+        grid.setWalkable(2, 1, false);
 
         Node start = grid.getNode(0, 0);
-        Node goal = grid.getNode(9, 9);
+        Node goal = grid.getNode(2, 2);
 
         JPS jps = new JPS(grid);
         List<Node> path = jps.findPath(start, goal);

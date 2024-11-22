@@ -1,5 +1,5 @@
 
-public class Node {
+public class Node implements Comparable<Node>{
     private int x;
     private int y;
     private boolean walkable = true;
@@ -40,5 +40,10 @@ public class Node {
     @Override
     public int hashCode() {
         return 31 * x + y;
+    }
+
+    @Override
+    public int compareTo(Node other) {
+        return Double.compare(this.getF(), other.getF());
     }
 }
