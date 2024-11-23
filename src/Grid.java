@@ -30,11 +30,11 @@ public class Grid {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             return grid[x][y];
         }
-        return null;  // return null if the coordinates are out of bounds
+        return null;  // null if the coordinates are out of bounds
     }
 
     /**
-     * Set the walkable status of a node at (x, y).
+     * Set the walkable status of a node at the given coordinates.
      *
      * @param x x-coordinate of the node.
      * @param y y-coordinate of the node.
@@ -60,7 +60,7 @@ public class Grid {
         int x = node.getX();
         int y = node.getY();
 
-        // Directions: N, S, E, W, NE, NW, SE, SW (8 directions)
+        // 8 directions
         int[][] directions = {
                 {-1, 0}, {1, 0}, {0, -1}, {0, 1},   // Cardinal directions
                 {-1, -1}, {-1, 1}, {1, -1}, {1, 1}   // Diagonal directions

@@ -7,6 +7,11 @@ class NodeTest {
         Node node = new Node(5, 10);
         assertEquals(5, node.getX());
         assertEquals(10, node.getY());
+    }
+
+    @Test
+    void testIsWalkable(){
+        Node node = new Node(2,2);
         assertTrue(node.isWalkable());
     }
 

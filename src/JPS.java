@@ -10,9 +10,9 @@ public class JPS {
     /**
      * Finds a path from the start node to the goal node.
      *
-     * @param start The start node.
-     * @param goal The goal node.
-     * @return A list of nodes representing the path, or an empty list if no path exists.
+     * @param start  start node.
+     * @param goal  goal node.
+     * @return A list representing the path, or an empty list if no path exists.
      */
     public List<Node> findPath(Node start, Node goal) {
         PriorityQueue<Node> openList = new PriorityQueue<>(Comparator.comparingDouble(Node::getF));
@@ -56,9 +56,9 @@ public class JPS {
 
     /**
      *
-     * @param current
-     * @param goal
-     * @return
+     * @param current current node
+     * @param goal goal node
+     * @return List of nodes to jump to from the current node to the goal node
      */
     private List<Node> identifySuccessors(Node current, Node goal) {
         List<Node> successors = new ArrayList<>();
@@ -95,7 +95,7 @@ public class JPS {
     }
 
     /**
-     * Calculates the distance between two neighboring nodes (diagonal or straight-line).
+     * Calculates the distance between two nodes (diagonal or cardinal).
      */
     private double distance(Node a, Node b) {
         int dx = Math.abs(a.getX() - b.getX());
