@@ -15,8 +15,17 @@ public class Grid {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 grid[x][y] = new Node(x, y);
+                //setWalkable(x, y, true);
             }
         }
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     /**
