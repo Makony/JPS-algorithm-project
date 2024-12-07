@@ -2,22 +2,18 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
-class JPSTest {
+class AStarTest {
+
     @Test
     void testFindPathSimple() {
         Grid grid = new Grid(5, 5);
 
-        grid.setWalkable(0,2,false);
-        grid.setWalkable(1,2,false);
-
-
         Node start = grid.getNode(0, 0);
         Node goal = grid.getNode(3, 0);
 
-        JPS jps = new JPS(grid);
-        List<Node> path = jps.findPath(start, goal);
+        AStar astar = new AStar(grid);
+        List<Node> path = astar.findPath(start, goal);
 
-        // Check the start and goal are included in the path
         assertEquals(start, path.get(0));
         assertEquals(goal, path.get(path.size() - 1));
     }
@@ -32,10 +28,9 @@ class JPSTest {
         Node start = grid.getNode(0, 0);
         Node goal = grid.getNode(4, 2);
 
-        JPS jps = new JPS(grid);
-        List<Node> path = jps.findPath(start, goal);
+        AStar astar = new AStar(grid);
+        List<Node> path = astar.findPath(start, goal);
 
-        // Ensure a path was found
         assertTrue(path.size() >= 2);
         assertEquals(start, path.get(0));
         assertEquals(goal, path.get(path.size() - 1));
@@ -45,7 +40,6 @@ class JPSTest {
     void testNoPath() {
         Grid grid = new Grid(5, 5);
 
-        // Block a row completely
         grid.setWalkable(2, 0, false);
         grid.setWalkable(2, 1, false);
         grid.setWalkable(2, 2, false);
@@ -55,26 +49,10 @@ class JPSTest {
         Node start = grid.getNode(0, 0);
         Node goal = grid.getNode(4, 4);
 
-        JPS jps = new JPS(grid);
-        List<Node> path = jps.findPath(start, goal);
+        AStar astar = new AStar(grid);
+        List<Node> path = astar.findPath(start, goal);
 
-        // Ensure no path was found
         assertTrue(path.isEmpty());
-    }
-
-    @Test
-    void testGoalIsStart() {
-        Grid grid = new Grid(5, 5);
-
-
-        Node start = grid.getNode(0, 0);
-        Node goal = grid.getNode(0, 0);
-
-        JPS jps = new JPS(grid);
-        List<Node> path = jps.findPath(start, goal);
-
-        assertEquals(1, path.size());
-        assertEquals(start, path.get(0));
     }
 
     @Test
@@ -87,13 +65,27 @@ class JPSTest {
         Node start = grid.getNode(0, 0);
         Node goal = grid.getNode(2, 2);
 
-        JPS jps = new JPS(grid);
-        List<Node> path = jps.findPath(start, goal);
+        AStar astar = new AStar(grid);
+        List<Node> path = astar.findPath(start, goal);
 
         assertEquals(start, path.get(0));
         assertEquals(goal, path.get(path.size() - 1));
 
         assertTrue(path.contains(grid.getNode(1, 1)));
     }
-}
 
+    @Test
+    void testGoalIsStart() {
+        Grid grid = new Grid(5, 5);
+
+
+        Node start = grid.getNode(0, 0);
+        Node goal = grid.getNode(0, 0);
+
+        AStar astar = new AStar(grid);
+        List<Node> path = astar.findPath(start, goal);
+
+        assertEquals(1, path.size());
+        assertEquals(start, path.get(0));
+    }
+}
