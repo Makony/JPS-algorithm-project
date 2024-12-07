@@ -1,19 +1,98 @@
 import java.util.List;
 import java.util.Scanner;
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+        try {
+
+            String mapFilePath = "C:/Users/user/Desktop/JPS/maps/Berlin_0_1024.map";
+            Grid grid = MapFileReader.loadMap(mapFilePath);
+
+            String scenFilePath = "C:/Users/user/Desktop/JPS/maps/Berlin_0_1024.map.scen";
+            List<Scenario> scenarios = ScenFileReader.loadScenarios(scenFilePath);
+
+            for (Scenario scenario : scenarios) {
+                Node start = grid.getNode(scenario.startX, scenario.startY);
+                Node goal = grid.getNode(scenario.goalX, scenario.goalY);
+
+                System.out.printf("Scenario: Start (%d, %d), Goal (%d, %d)%n",
+                        scenario.startX, scenario.startY, scenario.goalX, scenario.goalY);
+
+                // Run JPS
+                JPS jps = new JPS(grid);
+                long startJps = System.nanoTime();
+                List<Node> jpsPath = jps.findPath(start, goal);
+                long endJps = System.nanoTime();
+
+                // Run A*
+                AStar astar = new AStar(grid);
+                long startAStar = System.nanoTime();
+                List<Node> aStarPath = astar.findPath(start, goal);
+                long endAStar = System.nanoTime();
+
+                // Display results
+                System.out.println("Results:");
+                if (!jpsPath.isEmpty()) {
+                    System.out.println("JPS Path found. Time: " + (endJps - startJps) / 1e6 + " ms");
+                } else {
+                    System.out.println("JPS Path not found.");
+                }
+
+                if (!aStarPath.isEmpty()) {
+                    System.out.println("A* Path found. Time: " + (endAStar - startAStar) / 1e6 + " ms");
+                } else {
+                    System.out.println("A* Path not found.");
+                }
+
+                System.out.println();
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading files: " + e.getMessage());
+        }
+    }
+
+
+
+        /*Grid grid = new Grid(4, 4);
+
+
+        grid.setWalkable(0,1,false);
+        grid.setWalkable(1,2,false);
+        grid.setWalkable(2,3,false);
+        grid.setWalkable(3,2,false);
+
+
+
+
+        Node start = grid.getNode(0, 0);
+        Node goal = grid.getNode(3, 1);
+
+        JPS jps = new JPS(grid);
+        List<Node> path = jps.findPath(start, goal);
+
+        printPath(grid, path, start, goal );
+
+        if (!path.isEmpty()) {
+            System.out.println("Path found:");
+            for (Node node : path) {
+                System.out.println("(" + node.getX() + ", " + node.getY() + ")");
+            }
+        } else {
+            System.out.println("No path found.");
+        }
+
+        /*Scanner scanner = new Scanner(System.in);
 
         // Get grid size
-        System.out.println("Enter grid size (rows *space* cols): ");
-        int rows = scanner.nextInt();
-        int cols = scanner.nextInt();
+        System.out.println("Enter grid size (rows *space* columns): ");
+        int width = scanner.nextInt();
+        int height = scanner.nextInt();
 
-        Grid grid = new Grid(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        Grid grid = new Grid(width, height);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 grid.setWalkable(i, j, true);
             }
         }
@@ -58,7 +137,7 @@ public class Main {
             System.out.println("No path found.");
         }
 
-        scanner.close();
+        scanner.close();*/
 
     }
 
@@ -69,14 +148,14 @@ public class Main {
      * @param start start node
      * @param goal goal node
      */
-    public static void printPath(Grid grid, List<Node> path, Node start, Node goal) {
-        int rows = grid.getHeight();
-        int cols = grid.getWidth();
-        char[][] displayGrid = new char[rows][cols];
+   /* public static void printPath(Grid grid, List<Node> path, Node start, Node goal) {
+        int height = grid.getHeight();
+        int width = grid.getWidth();
+        char[][] displayGrid = new char[width][height];
 
         // grid display
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
+        for (int r = 0; r < width; r++) {
+            for (int c = 0; c < height; c++) {
                 if (!grid.getNode(r, c).isWalkable()) {
                     displayGrid[r][c] = '#';
                 } else {
@@ -85,7 +164,7 @@ public class Main {
             }
         }
 
-        // Mark path on the grid
+        // Mark jump points on the grid
         for (Node node : path) {
             displayGrid[node.getX()][node.getY()] = '*';
         }
@@ -95,11 +174,11 @@ public class Main {
         displayGrid[goal.getX()][goal.getY()] = 'G';
 
         // Print the grid
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
+        for (int r = 0; r < width; r++) {
+            for (int c = 0; c < height; c++) {
                 System.out.print(displayGrid[r][c] + " ");
             }
             System.out.println();
         }
-    }
-}
+    }*/
+

@@ -6,20 +6,20 @@ import java.util.List;
 class JPSTest {
     @Test
     void testFindPathSimple() {
-        Grid grid = new Grid(3, 3);
+        Grid grid = new Grid(5, 5);
 
-        grid.setWalkable(0, 0, true);
-        grid.setWalkable(0, 1, true);
-        grid.setWalkable(0, 2, true);
-        grid.setWalkable(1, 2, true);
-        grid.setWalkable(2, 2, true);
-        grid.setWalkable(1, 0, true);
-        grid.setWalkable(2, 0, true);
-        grid.setWalkable(1, 1, true);
-        grid.setWalkable(2, 1, false);
+        for (int x = 0; x < 5; x++) {
+            for (int y = 0; y < 5; y++) {
+                grid.setWalkable(x, y, true);
+            }
+        }
+
+        grid.setWalkable(0,2,false);
+        grid.setWalkable(1,2,false);
+
 
         Node start = grid.getNode(0, 0);
-        Node goal = grid.getNode(2, 2);
+        Node goal = grid.getNode(3, 0);
 
         JPS jps = new JPS(grid);
         List<Node> path = jps.findPath(start, goal);
@@ -31,26 +31,25 @@ class JPSTest {
 
     @Test
     void testFindPathWithObstacles() {
-        Grid grid = new Grid(3, 3);
+        Grid grid = new Grid(5, 5);
 
-        grid.setWalkable(0, 0, true);
-        grid.setWalkable(0, 1, true);
-        grid.setWalkable(0, 2, true);
-        grid.setWalkable(1, 2, true);
-        grid.setWalkable(2, 2, true);
-        grid.setWalkable(1, 0, false);
-        grid.setWalkable(2, 0, false);
-        grid.setWalkable(1, 1, false);
-        grid.setWalkable(2, 1, false);
+        for (int x = 0; x < 5; x++) {
+            for (int y = 0; y < 5; y++) {
+                grid.setWalkable(x, y, true);
+            }
+        }
+
+        grid.setWalkable(0, 2, false);
+        grid.setWalkable(1, 2, false);
 
         Node start = grid.getNode(0, 0);
-        Node goal = grid.getNode(2, 2);
+        Node goal = grid.getNode(4, 2);
 
         JPS jps = new JPS(grid);
         List<Node> path = jps.findPath(start, goal);
 
-        // Ensure a path was found around the obstacles
-        assertTrue(path.size() > 0);
+        // Ensure a path was found
+        assertTrue(path.size() >= 2);
         assertEquals(start, path.get(0));
         assertEquals(goal, path.get(path.size() - 1));
     }

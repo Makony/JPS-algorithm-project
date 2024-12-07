@@ -1,13 +1,11 @@
-
-public class Node implements Comparable<Node>{
+public class Node implements Comparable<Node> {
     private int x;
     private int y;
     private boolean walkable = true;
 
-    // Pathfinding properties
     private Node parent;
-    private double g; // Cost from start node
-    private double f; // Estimated total cost
+    private double g;
+    private double f;
 
     public Node(int x, int y) {
         this.x = x;
@@ -44,6 +42,6 @@ public class Node implements Comparable<Node>{
 
     @Override
     public int compareTo(Node other) {
-        return Double.compare(this.getF(), other.getF());
+        return Double.compare(this.f, other.f);
     }
 }

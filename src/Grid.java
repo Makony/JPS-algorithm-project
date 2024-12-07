@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Grid {
-    private int width;
-    private int height;
-    private Node[][] grid;
+    private final int width;
+    private final int height;
+    private final Node[][] grid;
 
     public Grid(int width, int height) {
         this.width = width;
@@ -15,40 +15,20 @@ public class Grid {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 grid[x][y] = new Node(x, y);
-                //setWalkable(x, y, true);
             }
         }
     }
 
-    public int getHeight() {
-        return height;
-    }
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
 
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * Get a node by its coordinates.
-     *
-     * @param x x-coordinate of the node.
-     * @param y y-coordinate of the node.
-     * @return Node at the given coordinates.
-     */
     public Node getNode(int x, int y) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             return grid[x][y];
         }
-        return null;  // null if the coordinates are out of bounds
+        return null;
     }
 
-    /**
-     * Set the walkable status of a node at the given coordinates.
-     *
-     * @param x x-coordinate of the node.
-     * @param y y-coordinate of the node.
-     * @param walkable true if the node is walkable, false if it's blocked.
-     */
     public void setWalkable(int x, int y, boolean walkable) {
         Node node = getNode(x, y);
         if (node != null) {
@@ -56,88 +36,89 @@ public class Grid {
         }
     }
 
-    /**
-     * Get a list of walkable neighbors of a node.
-     * Is used to identify neighbors
-     * in the grid that are walkable and lead to potential jump points.
-     *
-     * @param node The node for which neighbors are requested.
-     * @return List of walkable neighbors.
-     */
+    public boolean isWalkable(int x, int y) {
+        Node node = getNode(x, y);
+        return node != null && node.isWalkable();
+    }
+
+    public Node jump(Node current, Node goal, int dx, int dy) {
+        int x = current.getX();
+        int y = current.getY();
+
+
+        x += dx;
+        y += dy;
+
+        // Check if out of bounds or obstacle
+        if (!isWalkable(x, y)) {
+            //System.out.printf("Hit obstacle or out of bounds at: (%d, %d)%n", x, y);
+            return null;
+        }
+
+        Node node = getNode(x, y);
+        if (node == null) {
+            //System.out.printf("Node retrieval failed at: (%d, %d)%n", x, y);
+            return null;
+        }
+
+        // Check if we've reached the goal
+        if (node.equals(goal)) {
+            //System.out.printf("Reached goal at: (%d, %d)%n", x, y);
+            return node;
+        }
+
+        // Check for forced neighbors
+        if (dx != 0 && dy != 0) { // Diagonal movement
+            if ((isWalkable(x - dx, y) && !isWalkable(x - dx, y - dy)) ||
+                    (isWalkable(x, y - dy) && !isWalkable(x - dx, y - dy))) {
+                //System.out.printf("Found forced neighbor at: (%d, %d) [Diagonal]%n", x, y);
+                return node;
+            }
+        } else if (dx != 0) { // Horizontal movement
+            if ((isWalkable(x, y + 1) && !isWalkable(x - dx, y + 1)) ||
+                    (isWalkable(x, y - 1) && !isWalkable(x - dx, y - 1))) {
+                //System.out.printf("Found forced neighbor at: (%d, %d) [Horizontal]%n", x, y);
+                return node;
+            }
+        } else if (dy != 0) { // Vertical movement
+            if ((isWalkable(x + 1, y) && !isWalkable(x + 1, y - dy)) ||
+                    (isWalkable(x - 1, y) && !isWalkable(x - 1, y - dy))) {
+                //System.out.printf("Found forced neighbor at: (%d, %d) [Vertical]%n", x, y);
+                return node;
+            }
+        }
+
+        // Diagonal case: Check recursively in horizontal and vertical directions
+        if (dx != 0 && dy != 0) {
+            Node jumpHorizontal = jump(getNode(x, y), goal, dx, 0);
+            Node jumpVertical = jump(getNode(x, y), goal, 0, dy);
+            if (jumpHorizontal != null || jumpVertical != null) {
+                return node;
+            }
+        }
+
+
+        //System.out.printf("Continuing to jump from (%d, %d) in direction dx=%d, dy=%d%n", x, y, dx, dy);
+
+
+        return jump(node, goal, dx, dy);
+    }
+
+
+
     public List<Node> getNeighbors(Node node) {
         List<Node> neighbors = new ArrayList<>();
-        int x = node.getX();
-        int y = node.getY();
-
-        // 8 directions
         int[][] directions = {
                 {-1, 0}, {1, 0}, {0, -1}, {0, 1},   // Cardinal directions
-                {-1, -1}, {-1, 1}, {1, -1}, {1, 1}   // Diagonal directions
+                {-1, -1}, {-1, 1}, {1, -1}, {1, 1}  // Diagonal directions
         };
 
         for (int[] dir : directions) {
-            int nx = x + dir[0];
-            int ny = y + dir[1];
-            Node neighbor = getNode(nx, ny);
+            Node neighbor = getNode(node.getX() + dir[0], node.getY() + dir[1]);
             if (neighbor != null && neighbor.isWalkable()) {
                 neighbors.add(neighbor);
             }
         }
-
         return neighbors;
     }
-
-    /**
-     * Get a jump point starting from the current node in a given direction.
-     * It finds the next "jump point" in the search direction
-     *
-     * @param node The node where the search starts.
-     * @param dx Direction along the X axis (-1, 0, 1).
-     * @param dy Direction along the Y axis (-1, 0, 1).
-     * @return The next jump point, or null if no jump point is found.
-     */
-    public Node jump(Node node, int dx, int dy) {
-        int x = node.getX();
-        int y = node.getY();
-
-        // Move in the given direction
-        while (true) {
-            x += dx;
-            y += dy;
-
-            // Out of bounds check
-            if (x < 0 || x >= width || y < 0 || y >= height) {
-                return null;
-            }
-
-            Node current = getNode(x, y);
-            if (!current.isWalkable()) {
-                return null;  // Blocked node
-            }
-
-            // Check for forced neighbors (change of direction or jump point)
-            if (dx != 0) {
-                // Check for forced vertical neighbors (above or below the node)
-                if (isForcedNeighbor(x, y - 1) || isForcedNeighbor(x, y + 1)) {
-                    return current;
-                }
-            }
-
-            if (dy != 0) {
-                // Check for forced horizontal neighbors (left or right of the node)
-                if (isForcedNeighbor(x - 1, y) || isForcedNeighbor(x + 1, y)) {
-                    return current;
-                }
-            }
-
-            // Continue the jump if no forced neighbors are found
-        }
-    }
-
-    // Helper method to check if a node is a forced neighbor (blocked in the adjacent direction)
-    private boolean isForcedNeighbor(int x, int y) {
-        return getNode(x, y) != null && !getNode(x, y).isWalkable();
-    }
-
 }
-

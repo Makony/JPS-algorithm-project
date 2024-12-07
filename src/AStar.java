@@ -1,9 +1,9 @@
 import java.util.*;
 
-public class JPS {
+public class AStar {
     private final Grid grid;
 
-    public JPS(Grid grid) {
+    public AStar(Grid grid) {
         this.grid = grid;
     }
 
@@ -24,7 +24,7 @@ public class JPS {
 
             closedList.add(current);
 
-            for (Node successor : identifySuccessors(current, goal)) {
+            for (Node successor : identifySuccessors(current)) {
                 if (closedList.contains(successor)) continue;
 
                 double tentativeG = current.getG() + distance(current, successor);
@@ -44,57 +44,11 @@ public class JPS {
         return new ArrayList<>();
     }
 
-    private List<Node> identifySuccessors(Node current, Node goal) {
-        List<Node> successors = new ArrayList<>();
-
-        Node parent = current.getParent();
-        int dx = 0, dy = 0;
-
-        if (parent != null) {
-            dx = Integer.compare(current.getX(), parent.getX());
-            dy = Integer.compare(current.getY(), parent.getY());
-        }
-
-        List<int[]> validDirections = pruneDirections(dx, dy);
-
-        for (int[] dir : validDirections) {
-            Node jumpPoint = grid.jump(current, goal, dir[0], dir[1]);
-            if (jumpPoint != null) {
-                successors.add(jumpPoint);
-            }
-        }
-
-        return successors;
-    }
-
-    private List<int[]> pruneDirections(int dx, int dy) {
-        List<int[]> directions = new ArrayList<>();
-
-        if (dx == 0 && dy == 0) {
-            directions.add(new int[] {1, 0});
-            directions.add(new int[] {-1, 0});
-            directions.add(new int[] {0, 1});
-            directions.add(new int[] {0, -1});
-            directions.add(new int[] {1, 1});
-            directions.add(new int[] {-1, 1});
-            directions.add(new int[] {1, -1});
-            directions.add(new int[] {-1, -1});
-        } else {
-            directions.add(new int[] {dx, dy});
-
-            if (dx != 0 && dy == 0) {
-                directions.add(new int[] {dx, 1});
-                directions.add(new int[] {dx, -1});
-            } else if (dx == 0 && dy != 0) {
-                directions.add(new int[] {1, dy});
-                directions.add(new int[] {-1, dy});
-            } else {
-                directions.add(new int[] {dx, 0});
-                directions.add(new int[] {0, dy});
-            }
-        }
-
-        return directions;
+    /**
+     * Unlike JPS, A* considers all valid neighbors without additional pruning.
+     */
+    private List<Node> identifySuccessors(Node current) {
+        return grid.getNeighbors(current);
     }
 
     private double heuristic(Node a, Node b) {

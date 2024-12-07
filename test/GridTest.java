@@ -42,7 +42,8 @@ class GridTest {
         grid.setWalkable(1, 1, false);
 
         Node start = grid.getNode(0, 0);
-        Node jumpPoint = grid.jump(start, 1, 1); // Diagonal jump
+        Node goal = grid.getNode(3, 3);
+        Node jumpPoint = grid.jump(start, goal,1, 1); // Diagonal jump
 
         assertNull(jumpPoint); // No valid jump point in this case
     }
