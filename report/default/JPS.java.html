@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JPS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">JPS.java</span></div><h1>JPS.java</h1><pre class="source lang-java linenums">import java.util.*;
+
+/**
+ * Class for the implementation of JPS logic
+ */
+public class JPS {
+    private final Grid grid;
+
+<span class="fc" id="L9">    public JPS(Grid grid) {</span>
+<span class="fc" id="L10">        this.grid = grid;</span>
+<span class="fc" id="L11">    }</span>
+
+    /**
+     * Method that finds path from start node to the goal
+     * @param start start node
+     * @param goal goal node
+     * @return path from start to the goal node, empty list if no path is found
+     */
+    public List&lt;Node&gt; findPath(Node start, Node goal) {
+<span class="fc" id="L20">        PriorityQueue&lt;Node&gt; openList = new PriorityQueue&lt;&gt;(Comparator.comparingDouble(Node::getF)); //Nodes for further evaluation</span>
+<span class="fc" id="L21">        Map&lt;Node, Double&gt; gScores = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L22">        Set&lt;Node&gt; closedList = new HashSet&lt;&gt;();</span>
+
+        //Initialize the start node
+<span class="fc" id="L25">        start.setG(0);</span>
+<span class="fc" id="L26">        start.setF(heuristic(start, goal));</span>
+<span class="fc" id="L27">        openList.add(start);</span>
+<span class="fc" id="L28">        gScores.put(start, 0.0);</span>
+
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        while (!openList.isEmpty()) {</span>
+<span class="fc" id="L31">            Node current = openList.poll();</span>
+
+            //Check if we have reached the goal
+<span class="fc bfc" id="L34" title="All 2 branches covered.">            if (current.equals(goal)) {</span>
+<span class="fc" id="L35">                return reconstructPath(goal);</span>
+            }
+
+<span class="fc" id="L38">            closedList.add(current);</span>
+
+            //Find the next valid node to go to
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            for (Node successor : identifySuccessors(current, goal)) {</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">                if (closedList.contains(successor)) continue;</span>
+
+                //Tentative G evaluates whether the path prom the current node to the successor is better
+<span class="fc" id="L45">                double tentativeG = gScores.getOrDefault(current, Double.MAX_VALUE) + distance(current, successor);</span>
+
+                //Check if tentative G score is lower than successor's g score
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">                if (tentativeG &lt; gScores.getOrDefault(successor, Double.MAX_VALUE)) {</span>
+                    //Update
+<span class="fc" id="L50">                    gScores.put(successor, tentativeG);</span>
+<span class="fc" id="L51">                    successor.setG(tentativeG);</span>
+<span class="fc" id="L52">                    successor.setF(tentativeG + heuristic(successor, goal));</span>
+<span class="fc" id="L53">                    successor.setParent(current);</span>
+
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">                    if (!openList.contains(successor)) {</span>
+<span class="fc" id="L56">                        openList.add(successor);</span>
+                    }
+                }
+<span class="fc" id="L59">            }</span>
+<span class="fc" id="L60">        }</span>
+
+<span class="fc" id="L62">        return Collections.emptyList();</span>
+    }
+
+    /**
+     * Method to find the next node after the current node
+     * @param current current node
+     * @param goal goal node
+     * @return list of successor nodes
+     */
+    private List&lt;Node&gt; identifySuccessors(Node current, Node goal) {
+<span class="fc" id="L72">        List&lt;Node&gt; successors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L73">        Node parent = current.getParent();</span>
+
+        //Identify direction based on the parent node
+<span class="fc" id="L76">        int dx = 0, dy = 0;</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (parent != null) {</span>
+<span class="fc" id="L78">            dx = Integer.compare(current.getX(), parent.getX());</span>
+<span class="fc" id="L79">            dy = Integer.compare(current.getY(), parent.getY());</span>
+        }
+
+        //Prune and find valid jump points
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (int[] dir : pruneDirections(dx, dy)) {</span>
+<span class="fc" id="L84">            Node jumpPoint = jump(current, goal, dir[0], dir[1]);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            if (jumpPoint != null) {</span>
+<span class="fc" id="L86">                successors.add(jumpPoint);</span>
+            }
+<span class="fc" id="L88">        }</span>
+
+<span class="fc" id="L90">        return successors;</span>
+    }
+
+    /**
+     * Method to find jump points
+     * @param current current node
+     * @param goal goal node
+     * @param dx direction in x-axis
+     * @param dy direction in y-axis
+     * @return the next valid jump point, null if there is no jump point
+     */
+    private Node jump(Node current, Node goal, int dx, int dy) {
+<span class="fc" id="L102">        int x = current.getX() + dx;</span>
+<span class="fc" id="L103">        int y = current.getY() + dy;</span>
+
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (!grid.isWalkable(x, y)) return null;</span>
+
+<span class="fc" id="L107">        Node node = grid.getNode(x, y);</span>
+<span class="pc bpc" id="L108" title="1 of 4 branches missed.">        if (node == null || node.equals(goal)) return node;</span>
+
+        // Check for forced neighbors
+<span class="fc bfc" id="L111" title="All 4 branches covered.">        if (dx != 0 &amp;&amp; dy != 0) {</span>
+<span class="pc bpc" id="L112" title="1 of 4 branches missed.">            if ((grid.isWalkable(x - dx, y) &amp;&amp; !grid.isWalkable(x - dx, y - dy)) ||</span>
+<span class="pc bpc" id="L113" title="2 of 4 branches missed.">                    (grid.isWalkable(x, y - dy) &amp;&amp; !grid.isWalkable(x - dx, y - dy))) {</span>
+<span class="nc" id="L114">                return node;</span>
+            }
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        } else if (dx != 0) {</span>
+<span class="fc bfc" id="L117" title="All 4 branches covered.">            if ((grid.isWalkable(x, y + 1) &amp;&amp; !grid.isWalkable(x - dx, y + 1)) ||</span>
+<span class="fc bfc" id="L118" title="All 4 branches covered.">                    (grid.isWalkable(x, y - 1) &amp;&amp; !grid.isWalkable(x - dx, y - 1))) {</span>
+<span class="fc" id="L119">                return node;</span>
+            }
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        } else if (dy != 0) {</span>
+<span class="pc bpc" id="L122" title="1 of 4 branches missed.">            if ((grid.isWalkable(x + 1, y) &amp;&amp; !grid.isWalkable(x + 1, y - dy)) ||</span>
+<span class="fc bfc" id="L123" title="All 4 branches covered.">                    (grid.isWalkable(x - 1, y) &amp;&amp; !grid.isWalkable(x - 1, y - dy))) {</span>
+<span class="fc" id="L124">                return node;</span>
+            }
+        }
+
+        // Check for jump points in diagonal directions
+<span class="fc bfc" id="L129" title="All 4 branches covered.">        if (dx != 0 &amp;&amp; dy != 0) {</span>
+<span class="pc bpc" id="L130" title="1 of 4 branches missed.">            if (jump(node, goal, dx, 0) != null || jump(node, goal, 0, dy) != null) {</span>
+<span class="fc" id="L131">                return node;</span>
+            }
+        }
+
+        // Continue jumping in the current direction
+<span class="fc" id="L136">        return jump(node, goal, dx, dy);</span>
+    }
+
+    /**
+     * Method for pruning
+     * @param dx direction in x-axis
+     * @param dy direction in y-axis
+     * @return list of valid directions
+     */
+    private List&lt;int[]&gt; pruneDirections(int dx, int dy) {
+        //Consider all directions if it is a start node
+<span class="pc bpc" id="L147" title="1 of 4 branches missed.">        if (dx == 0 &amp;&amp; dy == 0) {</span>
+<span class="fc" id="L148">            return List.of(</span>
+                    new int[]{1, 0}, new int[]{-1, 0},
+                    new int[]{0, 1}, new int[]{0, -1},
+                    new int[]{1, 1}, new int[]{-1, 1},
+                    new int[]{1, -1}, new int[]{-1, -1}
+            );
+        }
+
+<span class="fc" id="L156">        List&lt;int[]&gt; directions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L157">        directions.add(new int[]{dx, dy});</span>
+
+<span class="pc bpc" id="L159" title="2 of 4 branches missed.">        if (dx != 0 &amp;&amp; dy != 0) {</span>
+<span class="fc" id="L160">            directions.add(new int[]{dx, 0}); //horizontal</span>
+<span class="fc" id="L161">            directions.add(new int[]{0, dy}); //vertical</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        } else if (dx != 0) {</span>
+<span class="nc" id="L163">            directions.add(new int[]{dx, 1}); // step up</span>
+<span class="nc" id="L164">            directions.add(new int[]{dx, -1}); //step down</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        } else if (dy != 0) {</span>
+<span class="nc" id="L166">            directions.add(new int[]{1, dy}); //step right</span>
+<span class="nc" id="L167">            directions.add(new int[]{-1, dy}); //step left</span>
+        }
+
+<span class="fc" id="L170">        return directions;</span>
+    }
+
+    /**
+     * Calculates the heuristics between the nodes
+     * @param a first node
+     * @param b second node
+     * @return heuristic costs
+     */
+    private double heuristic(Node a, Node b) {
+<span class="fc" id="L180">        double dx = Math.abs(a.getX() - b.getX());</span>
+<span class="fc" id="L181">        double dy = Math.abs(a.getY() - b.getY());</span>
+<span class="fc" id="L182">        return dx + dy + (Math.sqrt(2) - 2) * Math.min(dx, dy);</span>
+    }
+
+    /**
+     * Computes the cost to move from the current node to the next one
+     * @param a current node
+     * @param b successor node
+     * @return computed distance
+     */
+    private double distance(Node a, Node b) {
+<span class="fc bfc" id="L192" title="All 4 branches covered.">        return (a.getX() != b.getX() &amp;&amp; a.getY() != b.getY()) ? Math.sqrt(2) : 1;</span>
+    }
+
+    /**
+     * Backtrack from the goal node to the start node to create the path
+     * @param goal goal node
+     * @return reconstructed path
+     */
+    private List&lt;Node&gt; reconstructPath(Node goal) {
+<span class="fc" id="L201">        LinkedList&lt;Node&gt; path = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L202">        Node current = goal;</span>
+
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        while (current != null) {</span>
+<span class="fc" id="L205">            path.addFirst(current);</span>
+<span class="fc" id="L206">            current = current.getParent();</span>
+        }
+
+<span class="fc" id="L209">        return path;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

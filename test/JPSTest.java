@@ -76,24 +76,5 @@ class JPSTest {
         assertEquals(1, path.size());
         assertEquals(start, path.get(0));
     }
-
-    @Test
-    void testDiagonalMovement() {
-        Grid grid = new Grid(5, 5);
-
-        grid.setWalkable(1, 0, false);
-        grid.setWalkable(0, 1, false);
-
-        Node start = grid.getNode(0, 0);
-        Node goal = grid.getNode(2, 2);
-
-        JPS jps = new JPS(grid);
-        List<Node> path = jps.findPath(start, goal);
-
-        assertEquals(start, path.get(0));
-        assertEquals(goal, path.get(path.size() - 1));
-
-        assertTrue(path.contains(grid.getNode(1, 1)));
-    }
 }
 

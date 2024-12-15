@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Compare.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Compare.java</span></div><h1>Compare.java</h1><pre class="source lang-java linenums">import java.util.List;
+
+/**
+ * Class to compare JPS and A* on a manually created grid
+ */
+<span class="nc" id="L6">public class Compare{</span>
+    public static void main(String args[]){
+
+        //Manually created dense Grid of bigger size to show that JPS is faster than A*
+
+<span class="nc" id="L11">        Grid grid = new Grid(3000, 3000);</span>
+
+<span class="nc bnc" id="L13" title="All 2 branches missed.">        for (int x = 0; x &lt; 3000; x++) {</span>
+<span class="nc bnc" id="L14" title="All 2 branches missed.">            for (int y = 0; y &lt; 3000; y++) {</span>
+
+                // Add obstacles
+<span class="nc bnc" id="L17" title="All 10 branches missed.">                if ((x + y) % 3 == 0 &amp;&amp; !(x == 0 &amp;&amp; y == 0) &amp;&amp; !(x == 2999 &amp;&amp; y == 2999)) {</span>
+<span class="nc" id="L18">                    grid.setWalkable(x, y, false);</span>
+                }
+            }
+        }
+
+        // Create a guaranteed path from the start to the goal
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        for (int i = 0; i &lt; 3000; i++) {</span>
+<span class="nc" id="L25">            grid.setWalkable(i, i, true);</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">            if (i &lt; 2999){</span>
+<span class="nc" id="L27">                grid.setWalkable(i + 1, i, true);</span>
+<span class="nc" id="L28">                grid.setWalkable(i, i + 1, true);</span>
+            }
+        }
+
+<span class="nc" id="L32">        Node start = grid.getNode(0, 0);</span>
+<span class="nc" id="L33">        Node goal = grid.getNode(2999, 2999);</span>
+
+<span class="nc" id="L35">        JPS jps = new JPS(grid);</span>
+<span class="nc" id="L36">        long startjps = System.nanoTime();</span>
+<span class="nc" id="L37">        List&lt;Node&gt; path = jps.findPath(start, goal);</span>
+<span class="nc" id="L38">        long endjps = System.nanoTime();</span>
+<span class="nc" id="L39">        System.out.println(&quot;JPS Path found. Time: &quot; + (endjps - startjps) / 1e6 + &quot; ms&quot;);</span>
+
+<span class="nc" id="L41">        AStar aStar = new AStar(grid);</span>
+<span class="nc" id="L42">        long startStar = System.nanoTime();</span>
+<span class="nc" id="L43">        List&lt;Node&gt; pathStar = aStar.findPath(start, goal);</span>
+<span class="nc" id="L44">        long endStar = System.nanoTime();</span>
+<span class="nc" id="L45">        System.out.println(&quot;A* Path found. Time: &quot; + (endStar - startStar) / 1e6 + &quot; ms&quot;);</span>
+<span class="nc" id="L46">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

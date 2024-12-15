@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompareOnMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">CompareOnMap.java</span></div><h1>CompareOnMap.java</h1><pre class="source lang-java linenums">import java.io.IOException;
+import java.util.List;
+
+/**
+ * Class that runs JPS and A* on a 1024x1024 Berlin Map and compares their runtime
+ */
+<span class="nc" id="L7">public class CompareOnMap {</span>
+    public static void main(String[] args) {
+
+        try {
+
+<span class="nc" id="L12">            String mapFilePath = &quot;maps/Berlin_0_1024.map&quot;;</span>
+<span class="nc" id="L13">            Grid grid = MapFileReader.loadMap(mapFilePath);</span>
+
+<span class="nc" id="L15">            String scenFilePath = &quot;maps/Berlin_0_1024.map.scen&quot;;</span>
+<span class="nc" id="L16">            List&lt;Scenario&gt; scenarios = ScenFileReader.loadScenarios(scenFilePath);</span>
+
+<span class="nc bnc" id="L18" title="All 2 branches missed.">            for (Scenario scenario : scenarios) {</span>
+<span class="nc" id="L19">                Node start = grid.getNode(scenario.startX, scenario.startY);</span>
+<span class="nc" id="L20">                Node goal = grid.getNode(scenario.goalX, scenario.goalY);</span>
+
+<span class="nc" id="L22">                System.out.printf(&quot;Scenario: Start (%d, %d), Goal (%d, %d)%n&quot;,</span>
+<span class="nc" id="L23">                        scenario.startX, scenario.startY, scenario.goalX, scenario.goalY);</span>
+
+                // Run JPS
+<span class="nc" id="L26">                JPS jps = new JPS(grid);</span>
+<span class="nc" id="L27">                long startJps = System.nanoTime();</span>
+<span class="nc" id="L28">                List&lt;Node&gt; jpsPath = jps.findPath(start, goal);</span>
+<span class="nc" id="L29">                long endJps = System.nanoTime();</span>
+
+                // Run A*
+<span class="nc" id="L32">                AStar astar = new AStar(grid);</span>
+<span class="nc" id="L33">                long startAStar = System.nanoTime();</span>
+<span class="nc" id="L34">                List&lt;Node&gt; aStarPath = astar.findPath(start, goal);</span>
+<span class="nc" id="L35">                long endAStar = System.nanoTime();</span>
+
+                // Display results
+<span class="nc" id="L38">                System.out.println(&quot;Results:&quot;);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">                if (!jpsPath.isEmpty()) {</span>
+<span class="nc" id="L40">                    System.out.println(&quot;JPS Path found. Time: &quot; + (endJps - startJps) / 1e6 + &quot; ms&quot;);</span>
+                } else {
+<span class="nc" id="L42">                    System.out.println(&quot;JPS Path not found.&quot;);</span>
+                }
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">                if (!aStarPath.isEmpty()) {</span>
+<span class="nc" id="L46">                    System.out.println(&quot;A* Path found. Time: &quot; + (endAStar - startAStar) / 1e6 + &quot; ms&quot;);</span>
+                } else {
+<span class="nc" id="L48">                    System.out.println(&quot;A* Path not found.&quot;);</span>
+                }
+
+<span class="nc" id="L51">                System.out.println();</span>
+<span class="nc" id="L52">            }</span>
+<span class="nc" id="L53">        } catch (IOException e) {</span>
+<span class="nc" id="L54">            System.err.println(&quot;Error reading files: &quot; + e.getMessage());</span>
+<span class="nc" id="L55">        }</span>
+<span class="nc" id="L56">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

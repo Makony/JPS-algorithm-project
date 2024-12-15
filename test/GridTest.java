@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.List;
 
 class GridTest {
@@ -32,20 +31,6 @@ class GridTest {
         assertEquals(6, neighbors.size()); // 8 possible neighbors minus 2 blocked
         assertFalse(neighbors.contains(grid.getNode(1, 0))); // Non-walkable
         assertFalse(neighbors.contains(grid.getNode(1, 2))); // Non-walkable
-    }
-
-    @Test
-    void testJump() {
-        Grid grid = new Grid(5, 5);
-
-        // Create a blocked path and test jumping logic
-        grid.setWalkable(1, 1, false);
-
-        Node start = grid.getNode(0, 0);
-        Node goal = grid.getNode(3, 3);
-        Node jumpPoint = grid.jump(start, goal,1, 1); // Diagonal jump
-
-        assertNull(jumpPoint); // No valid jump point in this case
     }
 }
 

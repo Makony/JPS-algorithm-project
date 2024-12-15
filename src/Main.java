@@ -1,89 +1,15 @@
 import java.util.List;
 import java.util.Scanner;
-import java.io.IOException;
 
+/**
+ * Class for the user interface implementation
+ * It takes users inputs and outputs a grid representation with the path
+ */
 public class Main {
-    public static void main(String[] args) {
 
-        try {
+    public static void main (String args[]){
 
-            String mapFilePath = "C:/Users/user/Desktop/JPS/maps/Berlin_0_1024.map";
-            Grid grid = MapFileReader.loadMap(mapFilePath);
-
-            String scenFilePath = "C:/Users/user/Desktop/JPS/maps/Berlin_0_1024.map.scen";
-            List<Scenario> scenarios = ScenFileReader.loadScenarios(scenFilePath);
-
-            for (Scenario scenario : scenarios) {
-                Node start = grid.getNode(scenario.startX, scenario.startY);
-                Node goal = grid.getNode(scenario.goalX, scenario.goalY);
-
-                System.out.printf("Scenario: Start (%d, %d), Goal (%d, %d)%n",
-                        scenario.startX, scenario.startY, scenario.goalX, scenario.goalY);
-
-                // Run JPS
-                JPS jps = new JPS(grid);
-                long startJps = System.nanoTime();
-                List<Node> jpsPath = jps.findPath(start, goal);
-                long endJps = System.nanoTime();
-
-                // Run A*
-                AStar astar = new AStar(grid);
-                long startAStar = System.nanoTime();
-                List<Node> aStarPath = astar.findPath(start, goal);
-                long endAStar = System.nanoTime();
-
-                // Display results
-                System.out.println("Results:");
-                if (!jpsPath.isEmpty()) {
-                    System.out.println("JPS Path found. Time: " + (endJps - startJps) / 1e6 + " ms");
-                } else {
-                    System.out.println("JPS Path not found.");
-                }
-
-                if (!aStarPath.isEmpty()) {
-                    System.out.println("A* Path found. Time: " + (endAStar - startAStar) / 1e6 + " ms");
-                } else {
-                    System.out.println("A* Path not found.");
-                }
-
-                System.out.println();
-            }
-        } catch (IOException e) {
-            System.err.println("Error reading files: " + e.getMessage());
-        }
-    }
-
-
-
-        /*Grid grid = new Grid(4, 4);
-
-
-        grid.setWalkable(0,1,false);
-        grid.setWalkable(1,2,false);
-        grid.setWalkable(2,3,false);
-        grid.setWalkable(3,2,false);
-
-
-
-
-        Node start = grid.getNode(0, 0);
-        Node goal = grid.getNode(3, 1);
-
-        JPS jps = new JPS(grid);
-        List<Node> path = jps.findPath(start, goal);
-
-        printPath(grid, path, start, goal );
-
-        if (!path.isEmpty()) {
-            System.out.println("Path found:");
-            for (Node node : path) {
-                System.out.println("(" + node.getX() + ", " + node.getY() + ")");
-            }
-        } else {
-            System.out.println("No path found.");
-        }
-
-        /*Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
         // Get grid size
         System.out.println("Enter grid size (rows *space* columns): ");
@@ -137,18 +63,18 @@ public class Main {
             System.out.println("No path found.");
         }
 
-        scanner.close();*/
+        scanner.close();
 
-    }
-
+}
     /**
      * Method to display the grid with start, goal nodes and obstacles
-     * @param grid grid
-     * @param path path
+     *
+     * @param grid  grid
+     * @param path  path
      * @param start start node
-     * @param goal goal node
+     * @param goal  goal node
      */
-   /* public static void printPath(Grid grid, List<Node> path, Node start, Node goal) {
+    public static void printPath(Grid grid, List<Node> path, Node start, Node goal) {
         int height = grid.getHeight();
         int width = grid.getWidth();
         char[][] displayGrid = new char[width][height];
@@ -180,5 +106,5 @@ public class Main {
             }
             System.out.println();
         }
-    }*/
-
+    }
+}

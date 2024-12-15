@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for the grid implementation
+ */
 public class Grid {
     private final int width;
     private final int height;
@@ -41,71 +44,11 @@ public class Grid {
         return node != null && node.isWalkable();
     }
 
-    public Node jump(Node current, Node goal, int dx, int dy) {
-        int x = current.getX();
-        int y = current.getY();
-
-
-        x += dx;
-        y += dy;
-
-        // Check if out of bounds or obstacle
-        if (!isWalkable(x, y)) {
-            //System.out.printf("Hit obstacle or out of bounds at: (%d, %d)%n", x, y);
-            return null;
-        }
-
-        Node node = getNode(x, y);
-        if (node == null) {
-            //System.out.printf("Node retrieval failed at: (%d, %d)%n", x, y);
-            return null;
-        }
-
-        // Check if we've reached the goal
-        if (node.equals(goal)) {
-            //System.out.printf("Reached goal at: (%d, %d)%n", x, y);
-            return node;
-        }
-
-        // Check for forced neighbors
-        if (dx != 0 && dy != 0) { // Diagonal movement
-            if ((isWalkable(x - dx, y) && !isWalkable(x - dx, y - dy)) ||
-                    (isWalkable(x, y - dy) && !isWalkable(x - dx, y - dy))) {
-                //System.out.printf("Found forced neighbor at: (%d, %d) [Diagonal]%n", x, y);
-                return node;
-            }
-        } else if (dx != 0) { // Horizontal movement
-            if ((isWalkable(x, y + 1) && !isWalkable(x - dx, y + 1)) ||
-                    (isWalkable(x, y - 1) && !isWalkable(x - dx, y - 1))) {
-                //System.out.printf("Found forced neighbor at: (%d, %d) [Horizontal]%n", x, y);
-                return node;
-            }
-        } else if (dy != 0) { // Vertical movement
-            if ((isWalkable(x + 1, y) && !isWalkable(x + 1, y - dy)) ||
-                    (isWalkable(x - 1, y) && !isWalkable(x - 1, y - dy))) {
-                //System.out.printf("Found forced neighbor at: (%d, %d) [Vertical]%n", x, y);
-                return node;
-            }
-        }
-
-        // Diagonal case: Check recursively in horizontal and vertical directions
-        if (dx != 0 && dy != 0) {
-            Node jumpHorizontal = jump(getNode(x, y), goal, dx, 0);
-            Node jumpVertical = jump(getNode(x, y), goal, 0, dy);
-            if (jumpHorizontal != null || jumpVertical != null) {
-                return node;
-            }
-        }
-
-
-        //System.out.printf("Continuing to jump from (%d, %d) in direction dx=%d, dy=%d%n", x, y, dx, dy);
-
-
-        return jump(node, goal, dx, dy);
-    }
-
-
-
+    /**
+     * Method to identify valid neighbors of the current node
+     * @param node current node
+     * @return a list of valid neighbors
+     */
     public List<Node> getNeighbors(Node node) {
         List<Node> neighbors = new ArrayList<>();
         int[][] directions = {
@@ -115,6 +58,7 @@ public class Grid {
 
         for (int[] dir : directions) {
             Node neighbor = getNode(node.getX() + dir[0], node.getY() + dir[1]);
+            //Check if the neighbor is valid
             if (neighbor != null && neighbor.isWalkable()) {
                 neighbors.add(neighbor);
             }
