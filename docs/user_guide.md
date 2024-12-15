@@ -9,7 +9,7 @@ To check if you have JDK installed, open a terminal or command prompt and run:
      ```bash
      java -version
      javac -version
-     ```run:
+     ```
 
 
 ## **Run the Program**
