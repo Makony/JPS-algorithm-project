@@ -40,6 +40,7 @@ This will create a `report` directory at the root of the project, containing an 
 
 
 ## **Coverage report**
+![image](https://github.com/user-attachments/assets/3c73be75-4a39-4a13-acd0-aac308e5ccad)
 
 ---
 
