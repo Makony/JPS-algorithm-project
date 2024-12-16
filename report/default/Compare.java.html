@@ -7,42 +7,67 @@
     public static void main(String args[]){
 
         //Manually created dense Grid of bigger size to show that JPS is faster than A*
+<span class="nc" id="L10">        Grid grid = createGrid();</span>
 
-<span class="nc" id="L11">        Grid grid = new Grid(3000, 3000);</span>
+<span class="nc" id="L12">        Node start = grid.getNode(0, 0);</span>
+<span class="nc" id="L13">        Node goal = grid.getNode(2999, 2999);</span>
 
-<span class="nc bnc" id="L13" title="All 2 branches missed.">        for (int x = 0; x &lt; 3000; x++) {</span>
-<span class="nc bnc" id="L14" title="All 2 branches missed.">            for (int y = 0; y &lt; 3000; y++) {</span>
+<span class="nc" id="L15">        compareTwo(grid, start, goal);</span>
+<span class="nc" id="L16">    }</span>
+
+    public static boolean compareTwo(Grid grid, Node start, Node goal){
+<span class="fc" id="L19">        JPS jps = new JPS(grid);</span>
+<span class="fc" id="L20">        long startJps = System.nanoTime();</span>
+<span class="fc" id="L21">        List&lt;Node&gt; jpsPath = jps.findPath(start, goal);</span>
+<span class="fc" id="L22">        long endJps = System.nanoTime();</span>
+<span class="fc" id="L23">        long jpsTime = (endJps - startJps);</span>
+
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if (!jpsPath.isEmpty()) {</span>
+<span class="fc" id="L26">            System.out.println(&quot;JPS Path found. Time: &quot; + (endJps - startJps) / 1e6 + &quot; ms&quot;);</span>
+        } else {
+<span class="nc" id="L28">            System.out.println(&quot;JPS Path not found.&quot;);</span>
+        }
+
+<span class="fc" id="L31">        AStar aStar = new AStar(grid);</span>
+<span class="fc" id="L32">        long startStar = System.nanoTime();</span>
+<span class="fc" id="L33">        List&lt;Node&gt; aStarPath = aStar.findPath(start, goal);</span>
+<span class="fc" id="L34">        long endStar = System.nanoTime();</span>
+<span class="fc" id="L35">        long aStarTime = (endStar - startStar);</span>
+
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">        if (!aStarPath.isEmpty()) {</span>
+<span class="fc" id="L38">            System.out.println(&quot;A* Path found. Time: &quot; + (endStar - startStar) / 1e6 + &quot; ms&quot;);</span>
+        } else {
+<span class="nc" id="L40">            System.out.println(&quot;A* Path not found.&quot;);</span>
+        }
+
+<span class="fc" id="L43">        System.out.println();</span>
+
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        return jpsTime &lt; aStarTime;</span>
+    }
+
+    public static Grid createGrid(){
+<span class="fc" id="L49">        Grid grid = new Grid(3000, 3000);</span>
+
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        for (int x = 0; x &lt; 3000; x++) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">            for (int y = 0; y &lt; 3000; y++) {</span>
 
                 // Add obstacles
-<span class="nc bnc" id="L17" title="All 10 branches missed.">                if ((x + y) % 3 == 0 &amp;&amp; !(x == 0 &amp;&amp; y == 0) &amp;&amp; !(x == 2999 &amp;&amp; y == 2999)) {</span>
-<span class="nc" id="L18">                    grid.setWalkable(x, y, false);</span>
+<span class="pc bpc" id="L55" title="1 of 10 branches missed.">                if ((x + y) % 3 == 0 &amp;&amp; !(x == 0 &amp;&amp; y == 0) &amp;&amp; !(x == 2999 &amp;&amp; y == 2999)) {</span>
+<span class="fc" id="L56">                    grid.setWalkable(x, y, false);</span>
                 }
             }
         }
 
         // Create a guaranteed path from the start to the goal
-<span class="nc bnc" id="L24" title="All 2 branches missed.">        for (int i = 0; i &lt; 3000; i++) {</span>
-<span class="nc" id="L25">            grid.setWalkable(i, i, true);</span>
-<span class="nc bnc" id="L26" title="All 2 branches missed.">            if (i &lt; 2999){</span>
-<span class="nc" id="L27">                grid.setWalkable(i + 1, i, true);</span>
-<span class="nc" id="L28">                grid.setWalkable(i, i + 1, true);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (int i = 0; i &lt; 3000; i++) {</span>
+<span class="fc" id="L63">            grid.setWalkable(i, i, true);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if (i &lt; 2999){</span>
+<span class="fc" id="L65">                grid.setWalkable(i + 1, i, true);</span>
+<span class="fc" id="L66">                grid.setWalkable(i, i + 1, true);</span>
             }
         }
 
-<span class="nc" id="L32">        Node start = grid.getNode(0, 0);</span>
-<span class="nc" id="L33">        Node goal = grid.getNode(2999, 2999);</span>
-
-<span class="nc" id="L35">        JPS jps = new JPS(grid);</span>
-<span class="nc" id="L36">        long startjps = System.nanoTime();</span>
-<span class="nc" id="L37">        List&lt;Node&gt; path = jps.findPath(start, goal);</span>
-<span class="nc" id="L38">        long endjps = System.nanoTime();</span>
-<span class="nc" id="L39">        System.out.println(&quot;JPS Path found. Time: &quot; + (endjps - startjps) / 1e6 + &quot; ms&quot;);</span>
-
-<span class="nc" id="L41">        AStar aStar = new AStar(grid);</span>
-<span class="nc" id="L42">        long startStar = System.nanoTime();</span>
-<span class="nc" id="L43">        List&lt;Node&gt; pathStar = aStar.findPath(start, goal);</span>
-<span class="nc" id="L44">        long endStar = System.nanoTime();</span>
-<span class="nc" id="L45">        System.out.println(&quot;A* Path found. Time: &quot; + (endStar - startStar) / 1e6 + &quot; ms&quot;);</span>
-<span class="nc" id="L46">    }</span>
+<span class="fc" id="L70">        return grid;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

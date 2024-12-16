@@ -22,8 +22,8 @@ public class Grid {
         }
 <span class="fc" id="L23">    }</span>
 
-<span class="nc" id="L25">    public int getWidth() { return width; }</span>
-<span class="nc" id="L26">    public int getHeight() { return height; }</span>
+<span class="fc" id="L25">    public int getWidth() { return width; }</span>
+<span class="fc" id="L26">    public int getHeight() { return height; }</span>
 
     public Node getNode(int x, int y) {
 <span class="fc bfc" id="L29" title="All 8 branches covered.">        if (x &gt;= 0 &amp;&amp; x &lt; width &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; height) {</span>
@@ -34,7 +34,7 @@ public class Grid {
 
     public void setWalkable(int x, int y, boolean walkable) {
 <span class="fc" id="L36">        Node node = getNode(x, y);</span>
-<span class="pc bpc" id="L37" title="1 of 2 branches missed.">        if (node != null) {</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (node != null) {</span>
 <span class="fc" id="L38">            node.setWalkable(walkable);</span>
         }
 <span class="fc" id="L40">    }</span>

@@ -7,7 +7,45 @@ public class Compare{
     public static void main(String args[]){
 
         //Manually created dense Grid of bigger size to show that JPS is faster than A*
+        Grid grid = createGrid();
 
+        Node start = grid.getNode(0, 0);
+        Node goal = grid.getNode(2999, 2999);
+
+        compareTwo(grid, start, goal);
+    }
+
+    public static boolean compareTwo(Grid grid, Node start, Node goal){
+        JPS jps = new JPS(grid);
+        long startJps = System.nanoTime();
+        List<Node> jpsPath = jps.findPath(start, goal);
+        long endJps = System.nanoTime();
+        long jpsTime = (endJps - startJps);
+
+        if (!jpsPath.isEmpty()) {
+            System.out.println("JPS Path found. Time: " + (endJps - startJps) / 1e6 + " ms");
+        } else {
+            System.out.println("JPS Path not found.");
+        }
+
+        AStar aStar = new AStar(grid);
+        long startStar = System.nanoTime();
+        List<Node> aStarPath = aStar.findPath(start, goal);
+        long endStar = System.nanoTime();
+        long aStarTime = (endStar - startStar);
+
+        if (!aStarPath.isEmpty()) {
+            System.out.println("A* Path found. Time: " + (endStar - startStar) / 1e6 + " ms");
+        } else {
+            System.out.println("A* Path not found.");
+        }
+
+        System.out.println();
+
+        return jpsTime < aStarTime;
+    }
+
+    public static Grid createGrid(){
         Grid grid = new Grid(3000, 3000);
 
         for (int x = 0; x < 3000; x++) {
@@ -29,19 +67,6 @@ public class Compare{
             }
         }
 
-        Node start = grid.getNode(0, 0);
-        Node goal = grid.getNode(2999, 2999);
-
-        JPS jps = new JPS(grid);
-        long startjps = System.nanoTime();
-        List<Node> path = jps.findPath(start, goal);
-        long endjps = System.nanoTime();
-        System.out.println("JPS Path found. Time: " + (endjps - startjps) / 1e6 + " ms");
-
-        AStar aStar = new AStar(grid);
-        long startStar = System.nanoTime();
-        List<Node> pathStar = aStar.findPath(start, goal);
-        long endStar = System.nanoTime();
-        System.out.println("A* Path found. Time: " + (endStar - startStar) / 1e6 + " ms");
+        return grid;
     }
 }

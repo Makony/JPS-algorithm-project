@@ -22,37 +22,11 @@ import java.util.List;
 <span class="nc" id="L22">                System.out.printf(&quot;Scenario: Start (%d, %d), Goal (%d, %d)%n&quot;,</span>
 <span class="nc" id="L23">                        scenario.startX, scenario.startY, scenario.goalX, scenario.goalY);</span>
 
-                // Run JPS
-<span class="nc" id="L26">                JPS jps = new JPS(grid);</span>
-<span class="nc" id="L27">                long startJps = System.nanoTime();</span>
-<span class="nc" id="L28">                List&lt;Node&gt; jpsPath = jps.findPath(start, goal);</span>
-<span class="nc" id="L29">                long endJps = System.nanoTime();</span>
-
-                // Run A*
-<span class="nc" id="L32">                AStar astar = new AStar(grid);</span>
-<span class="nc" id="L33">                long startAStar = System.nanoTime();</span>
-<span class="nc" id="L34">                List&lt;Node&gt; aStarPath = astar.findPath(start, goal);</span>
-<span class="nc" id="L35">                long endAStar = System.nanoTime();</span>
-
-                // Display results
-<span class="nc" id="L38">                System.out.println(&quot;Results:&quot;);</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">                if (!jpsPath.isEmpty()) {</span>
-<span class="nc" id="L40">                    System.out.println(&quot;JPS Path found. Time: &quot; + (endJps - startJps) / 1e6 + &quot; ms&quot;);</span>
-                } else {
-<span class="nc" id="L42">                    System.out.println(&quot;JPS Path not found.&quot;);</span>
-                }
-
-<span class="nc bnc" id="L45" title="All 2 branches missed.">                if (!aStarPath.isEmpty()) {</span>
-<span class="nc" id="L46">                    System.out.println(&quot;A* Path found. Time: &quot; + (endAStar - startAStar) / 1e6 + &quot; ms&quot;);</span>
-                } else {
-<span class="nc" id="L48">                    System.out.println(&quot;A* Path not found.&quot;);</span>
-                }
-
-<span class="nc" id="L51">                System.out.println();</span>
-<span class="nc" id="L52">            }</span>
-<span class="nc" id="L53">        } catch (IOException e) {</span>
-<span class="nc" id="L54">            System.err.println(&quot;Error reading files: &quot; + e.getMessage());</span>
-<span class="nc" id="L55">        }</span>
-<span class="nc" id="L56">    }</span>
+<span class="nc" id="L25">                boolean comparison = Compare.compareTwo(grid, start, goal);</span>
+<span class="nc" id="L26">            }</span>
+<span class="nc" id="L27">        } catch (IOException e) {</span>
+<span class="nc" id="L28">            System.err.println(&quot;Error reading files: &quot; + e.getMessage());</span>
+<span class="nc" id="L29">        }</span>
+<span class="nc" id="L30">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

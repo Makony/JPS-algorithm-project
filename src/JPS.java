@@ -98,7 +98,7 @@ public class JPS {
      * @param dy direction in y-axis
      * @return the next valid jump point, null if there is no jump point
      */
-    private Node jump(Node current, Node goal, int dx, int dy) {
+    public Node jump(Node current, Node goal, int dx, int dy) {
         int x = current.getX() + dx;
         int y = current.getY() + dy;
 
@@ -142,7 +142,7 @@ public class JPS {
      * @param dy direction in y-axis
      * @return list of valid directions
      */
-    private List<int[]> pruneDirections(int dx, int dy) {
+    public List<int[]> pruneDirections(int dx, int dy) {
         //Consider all directions if it is a start node
         if (dx == 0 && dy == 0) {
             return List.of(
@@ -171,7 +171,7 @@ public class JPS {
     }
 
     /**
-     * Calculates the heuristics between the nodes
+     * Calculates the heuristics between the nodes (diagonal distance)
      * @param a first node
      * @param b second node
      * @return heuristic costs

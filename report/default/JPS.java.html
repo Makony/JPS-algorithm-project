@@ -98,7 +98,7 @@ public class JPS {
      * @param dy direction in y-axis
      * @return the next valid jump point, null if there is no jump point
      */
-    private Node jump(Node current, Node goal, int dx, int dy) {
+    public Node jump(Node current, Node goal, int dx, int dy) {
 <span class="fc" id="L102">        int x = current.getX() + dx;</span>
 <span class="fc" id="L103">        int y = current.getY() + dy;</span>
 
@@ -142,9 +142,9 @@ public class JPS {
      * @param dy direction in y-axis
      * @return list of valid directions
      */
-    private List&lt;int[]&gt; pruneDirections(int dx, int dy) {
+    public List&lt;int[]&gt; pruneDirections(int dx, int dy) {
         //Consider all directions if it is a start node
-<span class="pc bpc" id="L147" title="1 of 4 branches missed.">        if (dx == 0 &amp;&amp; dy == 0) {</span>
+<span class="fc bfc" id="L147" title="All 4 branches covered.">        if (dx == 0 &amp;&amp; dy == 0) {</span>
 <span class="fc" id="L148">            return List.of(</span>
                     new int[]{1, 0}, new int[]{-1, 0},
                     new int[]{0, 1}, new int[]{0, -1},
@@ -156,22 +156,22 @@ public class JPS {
 <span class="fc" id="L156">        List&lt;int[]&gt; directions = new ArrayList&lt;&gt;();</span>
 <span class="fc" id="L157">        directions.add(new int[]{dx, dy});</span>
 
-<span class="pc bpc" id="L159" title="2 of 4 branches missed.">        if (dx != 0 &amp;&amp; dy != 0) {</span>
+<span class="fc bfc" id="L159" title="All 4 branches covered.">        if (dx != 0 &amp;&amp; dy != 0) {</span>
 <span class="fc" id="L160">            directions.add(new int[]{dx, 0}); //horizontal</span>
 <span class="fc" id="L161">            directions.add(new int[]{0, dy}); //vertical</span>
-<span class="nc bnc" id="L162" title="All 2 branches missed.">        } else if (dx != 0) {</span>
-<span class="nc" id="L163">            directions.add(new int[]{dx, 1}); // step up</span>
-<span class="nc" id="L164">            directions.add(new int[]{dx, -1}); //step down</span>
-<span class="nc bnc" id="L165" title="All 2 branches missed.">        } else if (dy != 0) {</span>
-<span class="nc" id="L166">            directions.add(new int[]{1, dy}); //step right</span>
-<span class="nc" id="L167">            directions.add(new int[]{-1, dy}); //step left</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        } else if (dx != 0) {</span>
+<span class="fc" id="L163">            directions.add(new int[]{dx, 1}); // step up</span>
+<span class="fc" id="L164">            directions.add(new int[]{dx, -1}); //step down</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        } else if (dy != 0) {</span>
+<span class="fc" id="L166">            directions.add(new int[]{1, dy}); //step right</span>
+<span class="fc" id="L167">            directions.add(new int[]{-1, dy}); //step left</span>
         }
 
 <span class="fc" id="L170">        return directions;</span>
     }
 
     /**
-     * Calculates the heuristics between the nodes
+     * Calculates the heuristics between the nodes (diagonal distance)
      * @param a first node
      * @param b second node
      * @return heuristic costs

@@ -22,33 +22,7 @@ public class CompareOnMap {
                 System.out.printf("Scenario: Start (%d, %d), Goal (%d, %d)%n",
                         scenario.startX, scenario.startY, scenario.goalX, scenario.goalY);
 
-                // Run JPS
-                JPS jps = new JPS(grid);
-                long startJps = System.nanoTime();
-                List<Node> jpsPath = jps.findPath(start, goal);
-                long endJps = System.nanoTime();
-
-                // Run A*
-                AStar astar = new AStar(grid);
-                long startAStar = System.nanoTime();
-                List<Node> aStarPath = astar.findPath(start, goal);
-                long endAStar = System.nanoTime();
-
-                // Display results
-                System.out.println("Results:");
-                if (!jpsPath.isEmpty()) {
-                    System.out.println("JPS Path found. Time: " + (endJps - startJps) / 1e6 + " ms");
-                } else {
-                    System.out.println("JPS Path not found.");
-                }
-
-                if (!aStarPath.isEmpty()) {
-                    System.out.println("A* Path found. Time: " + (endAStar - startAStar) / 1e6 + " ms");
-                } else {
-                    System.out.println("A* Path not found.");
-                }
-
-                System.out.println();
+                boolean comparison = Compare.compareTwo(grid, start, goal);
             }
         } catch (IOException e) {
             System.err.println("Error reading files: " + e.getMessage());
