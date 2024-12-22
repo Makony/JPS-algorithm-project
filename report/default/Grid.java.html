@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Grid.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Grid.java</span></div><h1>Grid.java</h1><pre class="source lang-java linenums">import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Class for the grid implementation
+ */
+public class Grid {
+    private final int width;
+    private final int height;
+    private final Node[][] grid;
+
+<span class="fc" id="L12">    public Grid(int width, int height) {</span>
+<span class="fc" id="L13">        this.width = width;</span>
+<span class="fc" id="L14">        this.height = height;</span>
+<span class="fc" id="L15">        grid = new Node[width][height];</span>
+
+        // Initialize the grid with nodes
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        for (int x = 0; x &lt; width; x++) {</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">            for (int y = 0; y &lt; height; y++) {</span>
+<span class="fc" id="L20">                grid[x][y] = new Node(x, y);</span>
+            }
+        }
+<span class="fc" id="L23">    }</span>
+
+<span class="fc" id="L25">    public int getWidth() { return width; }</span>
+<span class="fc" id="L26">    public int getHeight() { return height; }</span>
+
+    public Node getNode(int x, int y) {
+<span class="fc bfc" id="L29" title="All 8 branches covered.">        if (x &gt;= 0 &amp;&amp; x &lt; width &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; height) {</span>
+<span class="fc" id="L30">            return grid[x][y];</span>
+        }
+<span class="fc" id="L32">        return null;</span>
+    }
+
+    public void setWalkable(int x, int y, boolean walkable) {
+<span class="fc" id="L36">        Node node = getNode(x, y);</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (node != null) {</span>
+<span class="fc" id="L38">            node.setWalkable(walkable);</span>
+        }
+<span class="fc" id="L40">    }</span>
+
+    public boolean isWalkable(int x, int y) {
+<span class="fc" id="L43">        Node node = getNode(x, y);</span>
+<span class="fc bfc" id="L44" title="All 4 branches covered.">        return node != null &amp;&amp; node.isWalkable();</span>
+    }
+
+    /**
+     * Method to identify valid neighbors of the current node
+     * @param node current node
+     * @return a list of valid neighbors
+     */
+    public List&lt;Node&gt; getNeighbors(Node node) {
+<span class="fc" id="L53">        List&lt;Node&gt; neighbors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L54">        int[][] directions = {</span>
+                {-1, 0}, {1, 0}, {0, -1}, {0, 1},   // Cardinal directions
+                {-1, -1}, {-1, 1}, {1, -1}, {1, 1}  // Diagonal directions
+        };
+
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (int[] dir : directions) {</span>
+<span class="fc" id="L60">            Node neighbor = getNode(node.getX() + dir[0], node.getY() + dir[1]);</span>
+            //Check if the neighbor is valid
+<span class="fc bfc" id="L62" title="All 4 branches covered.">            if (neighbor != null &amp;&amp; neighbor.isWalkable()) {</span>
+<span class="fc" id="L63">                neighbors.add(neighbor);</span>
+            }
+        }
+<span class="fc" id="L66">        return neighbors;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
