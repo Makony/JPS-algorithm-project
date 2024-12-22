@@ -6,7 +6,7 @@ import java.util.List;
 public class Compare{
     public static void main(String args[]){
 
-        //Manually created dense Grid of bigger size to show that JPS is faster than A*
+        //Manually created Grid of bigger size to show that JPS is faster than A*
         Grid grid = createGrid();
 
         Node start = grid.getNode(0, 0);
@@ -47,6 +47,7 @@ public class Compare{
 
     public static Grid createGrid(){
         Grid grid = new Grid(3000, 3000);
+        //grid.setWalkable(1,1,false);
 
         for (int x = 0; x < 3000; x++) {
             for (int y = 0; y < 3000; y++) {

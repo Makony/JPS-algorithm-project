@@ -125,7 +125,7 @@ public class JPS {
             }
         }
 
-        // Check for jump points in diagonal directions
+        // Check for jump points in diagonal directions considering cardinal directions
         if (dx != 0 && dy != 0) {
             if (jump(node, goal, dx, 0) != null || jump(node, goal, 0, dy) != null) {
                 return node;
