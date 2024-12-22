@@ -1,46 +1,57 @@
 # Implementation Document
+
 ---
+
 ## General Structure of the Program
 
-### Classes
+### **Classes**
 
-1. **JPS**
-The core logic of the JPS algorithm
-Key Methods:
-     **findPath**:
-  	- Entry point for pathfinding.
-  	- Uses a priority queue for efficient node evaluation
-  	- Calculates tentative G and F scores
+---
 
-      **identifySuccessors**:
-  	- Identifies valid successors by pruning unnecessary nodes
+### 1. **JPS**  
+The core logic of the JPS algorithm.
 
-     **jump**:
-  	- Finds the next jump point 
-  	- Checks for forced neighbors and valid directions recursively
+#### **Key Methods:**
 
-      **pruneDirections**:
-  	- Prunes invalid directions based on the parent node's direction
-  	- Considers all directions for the start node
+- **findPath**  
+  - Entry point for pathfinding.  
+  - Uses a priority queue for efficient node evaluation.  
+  - Calculates tentative G and F scores.  
 
+- **identifySuccessors**  
+  - Identifies valid successors by pruning unnecessary nodes.  
 
-2. **Grid**
-Represents the 2D grid matrix
-Key Methods:
-     **isWalkable**:
-  	- Checks if a node is walkable
+- **jump**  
+  - Finds the next jump point.  
+  - Checks for forced neighbors and valid directions recursively.  
 
-      **getNeighbors**:
-  	- Retrieves a list of valid neighbor nodes
-     
+- **pruneDirections**  
+  - Prunes invalid directions based on the parent node's direction.  
+  - Considers all directions for the start node.  
 
-3. **Node**
-Represents a single node on the grid
-Has attributes such as:
-     - Coordinates
-     - Parent
-     - G, F scores
+---
 
+### 2. **Grid**  
+Represents the 2D grid matrix.
+
+#### **Key Methods:**
+
+- **isWalkable**  
+  - Checks if a node is walkable.  
+
+- **getNeighbors**  
+  - Retrieves a list of valid neighbor nodes.  
+
+---
+
+### 3. **Node**  
+Represents a single node on the grid.
+
+#### **Attributes:**
+
+- Coordinates  
+- Parent 
+- G, F Scores  
 
 
 ## Time and Space Complexity
