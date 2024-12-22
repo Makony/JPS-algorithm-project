@@ -6,7 +6,7 @@
 To run this project, ensure you have the Java Development Kit (JDK) installed. If it's not the case, visit [Oracle's JDK](https://www.oracle.com/java/technologies/javase-downloads.html) or [OpenJDK](https://openjdk.org/).
 
 To check if you have JDK installed, open a terminal or command prompt and run:
-     ```bash
+     ```
      java -version
      javac -version
      ```
