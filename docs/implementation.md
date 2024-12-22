@@ -90,6 +90,9 @@ G Scores list saves scores for nodes, space complexity is O(n).
    - Is faster than A* only on large grids
    - Probably could be more optimized for better runtime
 
+## Use of extensive language models
+ChatGPT was used for debugging and optimizing the code. Also Google was used on finding useful information about the algorithm and its implementation.
+
 ## References
 https://zerowidth.com/2013/a-visual-explanation-of-jump-point-search/
 
