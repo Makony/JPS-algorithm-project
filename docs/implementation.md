@@ -5,38 +5,38 @@
 ### Classes
 
 1. **JPS**
-   - The core logic of the JPS algorithm
-   - Key Methods:
-     - **findPath**:
+The core logic of the JPS algorithm
+Key Methods:
+     1. **findPath**:
   	- Entry point for pathfinding.
   	- Uses a priority queue for efficient node evaluation
   	- Calculates tentative G and F scores
 
-     - **identifySuccessors**:
+     2. **identifySuccessors**:
   	- Identifies valid successors by pruning unnecessary nodes
 
-     - **jump**:
+     3. **jump**:
   	- Finds the next jump point 
   	- Checks for forced neighbors and valid directions recursively
 
-     - **pruneDirections**:
+     4. **pruneDirections**:
   	- Prunes invalid directions based on the parent node's direction
   	- Considers all directions for the start node
 
 
 2. **Grid**
-   - Represents the 2D grid matrix
-   - Key Methods:
-     - **isWalkable**:
+Represents the 2D grid matrix
+Key Methods:
+     1. **isWalkable**:
   	- Checks if a node is walkable
 
-     - **getNeighbors**:
+     2. **getNeighbors**:
   	- Retrieves a list of valid neighbor nodes
      
 
 3. **Node**
-   - Represents a single node on the grid
-   - Has attributes such as:
+Represents a single node on the grid
+Has attributes such as:
      - Coordinates
      - Parent
      - G, F scores
