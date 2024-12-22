@@ -202,10 +202,37 @@ public class JPS {
         Node current = goal;
 
         while (current != null) {
-            path.addFirst(current);
-            current = current.getParent();
+            // Add nodes between current and its parent
+            Node parent = current.getParent();
+            if (parent != null) {
+                path.addAll(0, completePath(parent, current));
+            } else {
+                path.addFirst(current);
+            }
+            current = parent;
         }
 
         return path;
     }
+
+    /**
+     * Helper method to add nodes between jump points for the whole path.
+     * @param from starting node
+     * @param to ending node
+     * @return list of nodes between jumps
+     */
+    private List<Node> completePath(Node from, Node to) {
+        List<Node> interpolated = new ArrayList<>();
+        int x = from.getX(), y = from.getY();
+        int dx = Integer.signum(to.getX() - x), dy = Integer.signum(to.getY() - y);
+
+        while (x != to.getX() || y != to.getY()) {
+            x += dx;
+            y += dy;
+            interpolated.add(grid.getNode(x, y));
+        }
+
+        return interpolated;
+    }
+
 }
